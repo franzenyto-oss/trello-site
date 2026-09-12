@@ -1965,27 +1965,6 @@ function App() {
               Waking up your workspace and loading your boards.
             </p>
           </div>
-          <div className="loading-preview" aria-hidden="true">
-            <div className="loading-preview-column">
-              <span className="loading-preview-heading"></span>
-              <span className="loading-preview-card loading-preview-card-wide"></span>
-              <span className="loading-preview-card"></span>
-              <span className="loading-preview-card loading-preview-card-short"></span>
-            </div>
-            <div className="loading-preview-column loading-preview-column-offset">
-              <span className="loading-preview-heading"></span>
-              <span className="loading-preview-card"></span>
-              <span className="loading-preview-card loading-preview-card-wide"></span>
-            </div>
-            <div className="loading-preview-column loading-preview-column-last">
-              <span className="loading-preview-heading"></span>
-              <span className="loading-preview-card loading-preview-card-short"></span>
-              <span className="loading-preview-card"></span>
-            </div>
-          </div>
-          <div className="loading-progress" aria-hidden="true">
-            <span></span>
-          </div>
         </section>
       </main>
     );
