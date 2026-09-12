@@ -1942,7 +1942,7 @@ function App() {
   if (!stateReady) {
     return (
       <main className={`loading-state ${loadingExiting ? "loading-state-exiting" : ""}`} aria-busy="true">
-        <section className="loading-state-card" aria-labelledby="loading-title">
+        <section className="loading-content" aria-labelledby="loading-title">
           <div className="loading-logo-wrap">
             <div className="loading-orbit" aria-hidden="true">
               <span className="loading-orbit-track">

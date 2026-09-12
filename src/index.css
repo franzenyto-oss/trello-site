@@ -283,31 +283,17 @@ button {
   pointer-events: none;
 }
 
-.loading-state-card {
-  position: relative;
+.loading-content {
   width: min(100%, 520px);
-  overflow: hidden;
-  border: 1px solid #292929;
-  border-radius: 14px;
-  background: rgba(18, 18, 18, 0.92);
-  padding: 40px 40px 32px;
+  padding: 24px;
   text-align: center;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
   transform: translateY(0) scale(1);
   transition: opacity 420ms ease, transform 420ms ease;
 }
 
-.loading-state-exiting .loading-state-card {
+.loading-state-exiting .loading-content {
   opacity: 0;
   transform: translateY(-8px) scale(0.98);
-}
-
-.loading-state-card::before {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #4f73a8, #c026d3, #facc15, transparent);
-  content: "";
 }
 
 .loading-state-copy {
@@ -324,7 +310,7 @@ button {
   text-transform: uppercase;
 }
 
-.loading-state-card h1 {
+.loading-content h1 {
   margin: 9px 0 0;
   color: #f5f5f5;
   font-size: clamp(24px, 5vw, 30px);
@@ -346,14 +332,14 @@ button {
     padding: 16px;
   }
 
-  .loading-state-card {
-    padding: 34px 22px 26px;
+  .loading-content {
+    padding: 16px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .loading-state,
-  .loading-state-card {
+  .loading-content {
     transition: none;
   }
 
@@ -2299,13 +2285,7 @@ html[data-theme="light"] .loading-state {
     #eef3f8;
 }
 
-html[data-theme="light"] .loading-state-card {
-  border-color: #d6e0ec;
-  background: rgba(251, 253, 255, 0.94);
-  box-shadow: 0 28px 80px rgba(31, 54, 82, 0.14);
-}
-
-html[data-theme="light"] .loading-state-card h1 {
+html[data-theme="light"] .loading-content h1 {
   color: #172033;
 }
 
