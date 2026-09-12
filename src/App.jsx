@@ -6,6 +6,8 @@ const TOKEN_KEY = "mini-trello-token";
 const THEME_KEY = "mini-trello-theme";
 const API_BASE = process.env.REACT_APP_API_BASE || "";
 const CARD_DROP_END = "__card-drop-end__";
+const LOADING_MIN_DURATION = 4000;
+const LOADING_FADE_DURATION = 420;
 const emptyDragImage = document.createElement("div");
 emptyDragImage.style.position = "fixed";
 emptyDragImage.style.top = "-1000px";
@@ -1630,6 +1632,8 @@ function App() {
   const [userId, setUserId] = useState(readTokenUserId);
   const [authMode, setAuthMode] = useState("login");
   const [stateReady, setStateReady] = useState(!localStorage.getItem(TOKEN_KEY));
+  const [loadingExiting, setLoadingExiting] = useState(false);
+  const loadingStartedAt = useRef(Date.now());
   const [theme, setTheme] = useState(() => (
     localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark"
   ));
@@ -1678,6 +1682,9 @@ function App() {
       return;
     }
 
+    let finishTimer;
+    let fadeTimer;
+
     api("/api/state")
       .then((nextState) => {
         setState(nextState);
@@ -1688,7 +1695,21 @@ function App() {
         localStorage.removeItem(TOKEN_KEY);
         setUserId(null);
       })
-      .finally(() => setStateReady(true));
+      .finally(() => {
+        const remaining = Math.max(
+          0,
+          LOADING_MIN_DURATION - (Date.now() - loadingStartedAt.current)
+        );
+        finishTimer = setTimeout(() => {
+          setLoadingExiting(true);
+          fadeTimer = setTimeout(() => setStateReady(true), LOADING_FADE_DURATION);
+        }, remaining);
+      });
+
+    return () => {
+      clearTimeout(finishTimer);
+      clearTimeout(fadeTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -1920,12 +1941,39 @@ function App() {
 
   if (!stateReady) {
     return (
-      <main className="loading-state min-h-screen flex items-center justify-center px-4 py-10">
-        <section className="loading-state-card w-full max-w-md rounded-lg p-8 text-center shadow-sm">
+      <main className={`loading-state ${loadingExiting ? "loading-state-exiting" : ""}`} aria-busy="true">
+        <section className="loading-state-card" aria-labelledby="loading-title">
           <div className="loading-logo-wrap">
             <AppLogo />
           </div>
-          <h1 className="mt-2 text-2xl font-bold">Loading...</h1>
+          <div className="loading-state-copy">
+            <p className="loading-kicker">Your workspace is almost ready</p>
+            <h1 id="loading-title">Getting things in order</h1>
+            <p className="loading-description" role="status" aria-live="polite">
+              Waking up your workspace and loading your boards.
+            </p>
+          </div>
+          <div className="loading-preview" aria-hidden="true">
+            <div className="loading-preview-column">
+              <span className="loading-preview-heading"></span>
+              <span className="loading-preview-card loading-preview-card-wide"></span>
+              <span className="loading-preview-card"></span>
+              <span className="loading-preview-card loading-preview-card-short"></span>
+            </div>
+            <div className="loading-preview-column loading-preview-column-offset">
+              <span className="loading-preview-heading"></span>
+              <span className="loading-preview-card"></span>
+              <span className="loading-preview-card loading-preview-card-wide"></span>
+            </div>
+            <div className="loading-preview-column loading-preview-column-last">
+              <span className="loading-preview-heading"></span>
+              <span className="loading-preview-card loading-preview-card-short"></span>
+              <span className="loading-preview-card"></span>
+            </div>
+          </div>
+          <div className="loading-progress" aria-hidden="true">
+            <span></span>
+          </div>
         </section>
       </main>
     );
