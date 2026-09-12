@@ -77,6 +77,10 @@ async function cleanupLegacyFlooringDemoData() {
 }
 
 async function initDatabase() {
+  if (!(process.env.DATABASE_URL || "").startsWith("file:")) {
+    throw new Error("prisma/init-db.js only supports SQLite DATABASE_URL values.");
+  }
+
   await prisma.$executeRawUnsafe("PRAGMA foreign_keys = ON");
 
   await prisma.$executeRawUnsafe(`

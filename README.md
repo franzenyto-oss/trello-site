@@ -6,7 +6,7 @@
 
 - Frontend: React + JavaScript, Create React App
 - Backend: Node.js + Express
-- Database: SQLite
+- Database: PostgreSQL (Neon in production), SQLite for local development/tests
 - ORM: Prisma
 - Auth: JWT + bcrypt
 - Styling: Tailwind CSS
@@ -72,7 +72,34 @@ Frontend CRA dev server:
 npm.cmd run dev:client
 ```
 
-В production-режиме Express отдает собранную папку `build`.
+В production-режиме Express отдает собранную папку `build`. Скрипт запуска
+выбирает схему Prisma по `DATABASE_URL`: `file:...` использует локальную SQLite,
+а PostgreSQL URL использует `prisma db push`.
+
+## Деплой на Render + Neon
+
+В репозитории есть `render.yaml` с настройками web service. Создай Web Service
+из этого репозитория в Render и задай следующие переменные окружения:
+
+```env
+DATABASE_URL=postgresql://...из Neon...
+SESSION_SECRET=длинная-случайная-строка
+```
+
+`DATABASE_URL` должен быть Neon connection string; для приложения рекомендуется
+pooler URL Neon с параметром `sslmode=require`. Не добавляй реальные значения в
+репозиторий. `SESSION_SECRET` можно сгенерировать средствами Render.
+
+Команды Render:
+
+```text
+Build Command: npm ci && npm run prisma:generate:postgres && npm run build
+Start Command: npm start
+```
+
+При старте `npm start` применяет Prisma schema к PostgreSQL через `prisma db
+push`, после чего запускает Express на порту из `PORT` (Render задаёт его
+автоматически).
 
 ## Запуск через Docker
 
@@ -110,7 +137,9 @@ docker compose down -v
 npm.cmd test
 ```
 
-Тесты используют отдельную временную SQLite-базу и проверяют авторизацию, bcrypt-хеширование, JWT, CRUD досок/колонок/карточек, комментарии и защиту чужих ресурсов.
+Тесты используют отдельную временную SQLite-базу и перед запуском генерируют
+SQLite Prisma Client. Они проверяют авторизацию, bcrypt-хеширование, JWT, CRUD
+досок/колонок/карточек, комментарии и защиту чужих ресурсов.
 
 ## Основные файлы
 
@@ -118,6 +147,8 @@ npm.cmd test
 - `src/index.css` - Tailwind и кастомные стили
 - `server/server.js` - Express API и раздача frontend build
 - `prisma/schema.prisma` - Prisma-схема
+- `prisma/schema.sqlite.prisma` - локальная SQLite Prisma-схема
+- `prisma/setup-db.js` - выбор схемы и инициализация базы
 - `prisma/init-db.js` - инициализация SQLite-таблиц
 - `tests/api.test.js` - API-тесты
 - `Dockerfile` и `docker-compose.yml` - Docker-запуск
