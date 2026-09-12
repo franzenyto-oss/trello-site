@@ -265,6 +265,7 @@ button {
 }
 
 .loading-state {
+  position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
@@ -278,12 +279,109 @@ button {
   transition: opacity 420ms ease;
 }
 
+.loading-tiles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.loading-tile {
+  position: absolute;
+  display: block;
+  width: clamp(92px, 14vw, 190px);
+  aspect-ratio: 1.35;
+  border: 1px solid rgba(159, 182, 216, 0.08);
+  border-radius: 12px;
+  background: rgba(63, 95, 143, 0.055);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  opacity: 0.72;
+  animation: loading-tile-drift 17s ease-in-out infinite alternate;
+}
+
+.loading-tile-one {
+  top: 11%;
+  left: 8%;
+  transform: rotate(-12deg);
+}
+
+.loading-tile-two {
+  top: 20%;
+  right: 12%;
+  width: clamp(74px, 11vw, 150px);
+  transform: rotate(15deg);
+  animation-delay: -5s;
+  animation-direction: alternate-reverse;
+}
+
+.loading-tile-three {
+  top: 55%;
+  left: 2%;
+  width: clamp(68px, 10vw, 132px);
+  transform: rotate(18deg);
+  animation-delay: -9s;
+}
+
+.loading-tile-four {
+  right: 5%;
+  bottom: 12%;
+  transform: rotate(-18deg);
+  animation-delay: -3s;
+  animation-direction: alternate-reverse;
+}
+
+.loading-tile-five {
+  bottom: 4%;
+  left: 25%;
+  width: clamp(64px, 9vw, 118px);
+  transform: rotate(8deg);
+  animation-delay: -12s;
+}
+
+.loading-tile-six {
+  top: 7%;
+  left: 42%;
+  width: clamp(54px, 8vw, 104px);
+  transform: rotate(24deg);
+  animation-delay: -7s;
+}
+
+.loading-tile-seven {
+  top: 64%;
+  right: 25%;
+  width: clamp(58px, 8vw, 110px);
+  transform: rotate(-9deg);
+  animation-delay: -14s;
+  animation-direction: alternate-reverse;
+}
+
+.loading-tile-eight {
+  bottom: 21%;
+  left: 12%;
+  width: clamp(48px, 7vw, 94px);
+  transform: rotate(-22deg);
+  animation-delay: -2s;
+}
+
+@keyframes loading-tile-drift {
+  0% {
+    translate: 0 -10px;
+  }
+
+  100% {
+    translate: 0 14px;
+  }
+}
+
 .loading-state-exiting {
   opacity: 0;
   pointer-events: none;
 }
 
 .loading-content {
+  position: relative;
+  z-index: 1;
   width: min(100%, 520px);
   padding: 24px;
   text-align: center;
@@ -344,7 +442,8 @@ button {
   }
 
   .loading-orbit-track,
-  .loading-orbit-dot {
+  .loading-orbit-dot,
+  .loading-tile {
     animation: none;
   }
 

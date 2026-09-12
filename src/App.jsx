@@ -1942,6 +1942,16 @@ function App() {
   if (!stateReady) {
     return (
       <main className={`loading-state ${loadingExiting ? "loading-state-exiting" : ""}`} aria-busy="true">
+        <div className="loading-tiles" aria-hidden="true">
+          <span className="loading-tile loading-tile-one"></span>
+          <span className="loading-tile loading-tile-two"></span>
+          <span className="loading-tile loading-tile-three"></span>
+          <span className="loading-tile loading-tile-four"></span>
+          <span className="loading-tile loading-tile-five"></span>
+          <span className="loading-tile loading-tile-six"></span>
+          <span className="loading-tile loading-tile-seven"></span>
+          <span className="loading-tile loading-tile-eight"></span>
+        </div>
         <section className="loading-content" aria-labelledby="loading-title">
           <div className="loading-logo-wrap">
             <div className="loading-orbit" aria-hidden="true">
