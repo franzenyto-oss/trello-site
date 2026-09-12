@@ -8,6 +8,12 @@ const API_BASE = process.env.REACT_APP_API_BASE || "";
 const CARD_DROP_END = "__card-drop-end__";
 const LOADING_MIN_DURATION = 4000;
 const LOADING_FADE_DURATION = 420;
+const LOADING_STATUS_INTERVAL = 1100;
+const LOADING_STATUSES = [
+  "Пробуждаем рабочее пространство…",
+  "Загружаем ваши доски…",
+  "Почти готово…",
+];
 const emptyDragImage = document.createElement("div");
 emptyDragImage.style.position = "fixed";
 emptyDragImage.style.top = "-1000px";
@@ -1633,6 +1639,7 @@ function App() {
   const [authMode, setAuthMode] = useState("login");
   const [stateReady, setStateReady] = useState(!localStorage.getItem(TOKEN_KEY));
   const [loadingExiting, setLoadingExiting] = useState(false);
+  const [loadingStatusIndex, setLoadingStatusIndex] = useState(0);
   const loadingStartedAt = useRef(Date.now());
   const [theme, setTheme] = useState(() => (
     localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark"
@@ -1716,6 +1723,18 @@ function App() {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (stateReady) return undefined;
+
+    const statusTimer = setInterval(() => {
+      setLoadingStatusIndex((currentIndex) => (
+        (currentIndex + 1) % LOADING_STATUSES.length
+      ));
+    }, LOADING_STATUS_INTERVAL);
+
+    return () => clearInterval(statusTimer);
+  }, [stateReady]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -1969,10 +1988,10 @@ function App() {
             </div>
           </div>
           <div className="loading-state-copy">
-            <p className="loading-kicker">Your workspace is almost ready</p>
-            <h1 id="loading-title">Getting things in order</h1>
+            <p className="loading-kicker">Рабочее пространство почти готово</p>
+            <h1 id="loading-title">Наводим порядок</h1>
             <p className="loading-description" role="status" aria-live="polite">
-              Waking up your workspace and loading your boards.
+              {LOADING_STATUSES[loadingStatusIndex]}
             </p>
           </div>
         </section>
