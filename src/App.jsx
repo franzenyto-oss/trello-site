@@ -1944,7 +1944,19 @@ function App() {
       <main className={`loading-state ${loadingExiting ? "loading-state-exiting" : ""}`} aria-busy="true">
         <section className="loading-state-card" aria-labelledby="loading-title">
           <div className="loading-logo-wrap">
-            <AppLogo />
+            <div className="loading-orbit" aria-hidden="true">
+              <span className="loading-orbit-track">
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+                <span className="loading-orbit-dot"></span>
+              </span>
+              <AppLogo />
+            </div>
           </div>
           <div className="loading-state-copy">
             <p className="loading-kicker">Your workspace is almost ready</p>
