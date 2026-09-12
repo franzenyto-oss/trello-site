@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id
+  email        String   @unique
+  salt         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  boards       Board[]
+  archiveItems ArchiveItem[]
+}
+
+model Board {
+  id        String   @id
+  userId    String
+  title     String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  columns   Column[]
+}
+
+model Column {
+  id       String @id
+  boardId  String
+  title    String
+  color    String @default("#64748b")
+  position Int
+  board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards    Card[]
+}
+
+model Card {
+  id          String    @id
+  columnId    String
+  title       String
+  description String    @default("")
+  dueDate     String    @default("")
+  label       String    @default("")
+  labelColor  String    @default("#10b981")
+  completed   Boolean   @default(false)
+  position    Int
+  column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+}
+
+model Comment {
+  id        String   @id
+  cardId    String
+  author    String
+  text      String
+  createdAt DateTime @default(now())
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+}
+
+model ArchiveItem {
+  id         String   @id
+  userId     String
+  itemType   String
+  itemId     String
+  archivedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemType, itemId])
+}
