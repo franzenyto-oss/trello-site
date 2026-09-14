@@ -1,0 +1,16 @@
+services:
+  trello:
+    build: .
+    container_name: mini-trello
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "file:/data/dev.db"
+      SESSION_SECRET: "change-this-secret"
+      PORT: "3000"
+    volumes:
+      - trello-data:/data
+    restart: unless-stopped
+
+volumes:
+  trello-data:
